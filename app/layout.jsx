@@ -401,45 +401,55 @@ export default function RootLayout({ children }) {
                     </nav> */}
                 </header>
                 {children}
-                <div className="relative -z-10 -mt-5 bg-zinc-900">
-                    <footer className="container mx-auto flex flex-col items-center justify-between gap-10 p-12 px-5 pt-24 sm:flex-row sm:gap-0 md:pt-16">
+              <div className="relative -z-10 -mt-5 bg-zinc-900">
+                    <footer className="container mx-auto flex flex-col items-center justify-left gap-10 p-12 md:flex-row md:items-start  md:pt-16 font-body text-base text-white">
                         <a
                             href="https://www.indiahci.org/2023/"
                             target="_blank"
                             rel="noreferrer noopener"
                         >
-                            <Image
-                                src={indiaHciLogoMonochrome}
-                                alt="India HCI 2023 Logo"
-                                width={120}
-                            />
+                            HCIPAI
                         </a>
-                        <hr className="my-8 h-px w-full border border-zinc-800/20 sm:hidden" />
-                        <div className="relative right-4 flex flex-col items-center gap-16 sm:flex-row sm:gap-20">
-                            <a
+                        <span className="text-white"> &bull; </span>
+                        <a
                                 href="https://www.indiahci.org/"
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >
-                                <Image
-                                    className="-mt-4"
-                                    src={hcipaiLogo}
-                                    alt="HCIPAI Logo"
-                                    width={160}
-                                    height={40}
-                                />
+                                FlyCHI
                             </a>
-                            <a
-                                href="https://www.linkedin.com/company/flychi"
+                            <span className="text-white"> &bull; </span>
+                         <a
+                                href="https://www.indiahci.org/"
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >
-                                <Image
-                                    src={flychiLogo}
-                                    alt="FlyCHI (UPES ACM SIGCHI Student Chapter) Logo"
-                                    width={160}
-                                    height={40}
-                                />
+                                Instagram
+                            </a>
+                        <a
+                                href="https://www.linkedin.com/company/flychi/"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                Linkedin
+                            </a>
+                        <a
+                                href="https://www.facebook.com/IndiaHCI/"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                Facebook
+                            </a>
+                        
+                        <div className=" flex flex-col items-center justify-center gap-16 px-15 md:flex-row md:gap-20 ml-auto font-body text-base">
+                    
+                            <a
+                                href="https://www.indiahci.org/2023/"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                className="text-transparent font-bold bg-clip-text bg-gradient-to-r from-amber-500 via orange-500 via-30% to-[#ff2d68]"
+                            >
+                                India HCI 2023
                             </a>
                         </div>
                     </footer>

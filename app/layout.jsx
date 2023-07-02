@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
                                 height={117}
                             />
                         </a>
-                        {/* <nav className="gap-14 md:hidden">
+                         <nav className="gap-14 md:hidden">
                             <Popover className="">
                                 {({ open }) => (
                                     <>
@@ -78,7 +78,7 @@ export default function RootLayout({ children }) {
                                             leaveFrom="opacity-100 translate-y-0"
                                             leaveTo="opacity-0 translate-y-1"
                                         >
-                                            <Popover.Panel className="absolute left-[12px] top-[0px] z-30 mt-3 flex h-[calc(100%-24px)] w-[calc(100%-24px)] flex-col overflow-scroll rounded-2xl bg-zinc-900 font-body text-sm font-normal text-white">
+                                            <Popover.Panel className="fixed inset-0 absolute left-[12px] top-[0px] z-30 mt-3 flex h-[calc(100%-24px)] w-[calc(100%-24px)] flex-col overflow-scroll rounded-2xl bg-zinc-900 font-body text-sm font-normal text-white">
                                                 <Popover.Button className="absolute right-4 top-4">
                                                     <Icon
                                                         className="h-8 w-8 text-white"
@@ -416,7 +416,7 @@ export default function RootLayout({ children }) {
                                     </>
                                 )}
                             </Popover>
-                        </nav> */}
+                        </nav> 
                     </header>
                 </div>
                 {children}

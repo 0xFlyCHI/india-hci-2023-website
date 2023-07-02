@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f1f1f1;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .loading-screen.loaded {
+    opacity: 0;
+  }

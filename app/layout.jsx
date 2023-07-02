@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { Popover, Transition } from '@headlessui/react';
+import LoadingScreen from '../components/LoadingScreen';
 
 // import { Root } from 'postcss';
 import { degularDisplay, ttHoves } from '../styles/fonts';
@@ -15,7 +16,19 @@ import indiaHciLogo from '../public/logos/india-hci-2023-logo.svg';
 
 import './globals.css';
 
+
+  
+  
+
 export default function RootLayout({ children }) {
+    const Layout = ({ children }) => {
+        return (
+          <div>
+            <LoadingScreen />
+            {children}
+          </div>
+        );
+      };
     return (
         <html lang="en">
             <Helmet>

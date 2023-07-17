@@ -7,7 +7,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { Popover, Transition } from '@headlessui/react';
-import LoadingSpinner from '@/components/Loading/LoadingSpinner';
+import animationData from '../public/98742-loading.json';
+import Lottie from 'react-lottie';
+
 
 // import { Root } from 'postcss';
 import { degularDisplay, ttHoves } from '../styles/fonts';
@@ -31,11 +33,37 @@ export default function RootLayout({ children }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
-    }, []);
+        const handleLoad = () => {
+          setIsLoading(false);
+        };
+      
+        const checkAssetsLoaded = () => {
+            setTimeout(() => {
+                if (document.readyState === 'complete') {
+                  setIsLoading(false);
+                } else {
+                  setTimeout(checkAssetsLoaded, 200);
+                }
+              }, 2000);
+        };
+      
+        checkAssetsLoaded();
+      
+        window.addEventListener('load', handleLoad);
+      
+        return () => {
+          window.removeEventListener('load', handleLoad);
+        };
+      }, []);
 
+      const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice',
+        },
+      };
     return (
         <html lang="en">
             <Helmet>
@@ -45,12 +73,11 @@ export default function RootLayout({ children }) {
                     content="Immerse yourself in a world of boundless possibilities as we explore the intersection of human-computer interaction and unleashing creativity. India HCI 2023 introduces the theme of HCI for Enabling Creativity for the international conference in the field of Human-Computer Interaction to positively impact and shape humanity through high-quality research in HCI and Design."
                 />
             </Helmet>
-            <body
-
-                className={`${degularDisplay.variable} ${ttHoves.variable} bg-zinc-900`}
-            >
+            <body className={`${degularDisplay.variable} ${ttHoves.variable} bg-zinc-900`} >
                 {isLoading ? (
-                    <LoadingSpinner />
+                    <div className="flex items-center justify-center h-screen bg-white">
+                    <Lottie options={defaultOptions} height={100} width={100} />
+                  </div>
                 ) : (
                     <>
                         <div className="bg-white">

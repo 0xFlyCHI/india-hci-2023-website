@@ -1,15 +1,15 @@
 'use client';
 
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import Link from 'next/link';
+import Lottie from 'react-lottie';
+import lottie from 'lottie-web';
 import { Icon } from '@iconify/react';
 import { Popover, Transition } from '@headlessui/react';
-import animationData from '../public/98742-loading.json';
-import Lottie from 'react-lottie';
-
+import loadingData from '../public/98742-loading.json';
 
 // import { Root } from 'postcss';
 import { degularDisplay, ttHoves } from '../styles/fonts';
@@ -31,39 +31,41 @@ export default function RootLayout({ children }) {
     }, []);
 
     const [isLoading, setIsLoading] = useState(true);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         const handleLoad = () => {
-          setIsLoading(false);
+            setIsLoading(false);
         };
-      
-        const checkAssetsLoaded = () => {
-            setTimeout(() => {
-                if (document.readyState === 'complete') {
-                  setIsLoading(false);
-                } else {
-                  setTimeout(checkAssetsLoaded, 200);
-                }
-              }, 2000);
-        };
-      
-        checkAssetsLoaded();
-      
-        window.addEventListener('load', handleLoad);
-      
-        return () => {
-          window.removeEventListener('load', handleLoad);
-        };
-      }, []);
 
-      const defaultOptions = {
+        const handleAnimationComplete = () => {
+            setIsLoading(false);
+        };
+
+        window.addEventListener('load', handleLoad);
+
+        const animation = lottie.loadAnimation({
+            container: containerRef.current,
+            animationData: loadingData,
+            loop: false,
+        });
+
+        animation.addEventListener('complete', handleAnimationComplete);
+
+        return () => {
+            window.removeEventListener('load', handleLoad);
+            animation.removeEventListener('complete', handleAnimationComplete);
+        };
+    }, []);
+
+    const defaultOptions = {
         loop: true,
         autoplay: true,
-        animationData: animationData,
+        loadingData,
         rendererSettings: {
-          preserveAspectRatio: 'xMidYMid slice',
+            preserveAspectRatio: 'xMidYMid slice',
         },
-      };
+    };
     return (
         <html lang="en" className="scroll-smooth">
             <Helmet>
@@ -73,11 +75,19 @@ export default function RootLayout({ children }) {
                     content="Immerse yourself in a world of boundless possibilities as we explore the intersection of human-computer interaction and unleashing creativity. India HCI 2023 introduces the theme of HCI for Enabling Creativity for the international conference in the field of Human-Computer Interaction to positively impact and shape humanity through high-quality research in HCI and Design."
                 />
             </Helmet>
-            <body className={`${degularDisplay.variable} ${ttHoves.variable} bg-zinc-900`} >
+            <body
+                className={`${degularDisplay.variable} ${ttHoves.variable} bg-zinc-900`}
+            >
                 {isLoading ? (
-                    <div className="flex items-center justify-center h-screen bg-white">
-                    <Lottie options={defaultOptions} height={100} width={100} />
-                  </div>
+                    <div className="flex h-screen items-center justify-center bg-white">
+                        <div ref={containerRef}>
+                            <Lottie
+                                options={defaultOptions}
+                                height={100}
+                                width={100}
+                            />
+                        </div>
+                    </div>
                 ) : (
                     <>
                         <div className="bg-white">
@@ -95,10 +105,11 @@ export default function RootLayout({ children }) {
                                         {({ open }) => (
                                             <>
                                                 <Popover.Button
-                                                    className={`${open
+                                                    className={`${
+                                                        open
                                                             ? 'text-amber-500'
                                                             : 'text-zinc-900'
-                                                        }
+                                                    }
                                                 inline-flex items-center text-sm font-semibold uppercase outline-none`}
                                                 >
                                                     <Icon
@@ -119,7 +130,7 @@ export default function RootLayout({ children }) {
                                                     <Popover.Panel className="absolute left-[12px] top-[0px] z-30 mt-3 flex h-[calc(100%-24px)] w-[calc(100%-24px)] flex-col overflow-scroll rounded-2xl bg-zinc-900 font-body text-sm font-normal text-white">
                                                         <Popover.Button className="sticky right-4 top-4">
                                                             <Icon
-                                                                className="h-8 w-8 absolute right-4 text-white"
+                                                                className="absolute right-4 h-8 w-8 text-white"
                                                                 icon="solar:close-square-bold"
                                                             />
                                                         </Popover.Button>
@@ -127,77 +138,151 @@ export default function RootLayout({ children }) {
                                                             <p className="inline-flex items-center text-sm font-semibold uppercase text-amber-500">
                                                                 Conference
                                                             </p>
-                                                            <Link className="py-2" href="/">
-                                                                Organizing Committee
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/organising-committee"
+                                                            >
+                                                                Organizing
+                                                                Committee
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Student Volunteers
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Student
+                                                                Volunteers
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Partners & Sponsors
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Partners &
+                                                                Sponsors
                                                             </Link>
                                                         </div>
                                                         <div className="flex flex-col gap-4 border-b border-zinc-800 p-6">
                                                             <p className="inline-flex items-center text-sm font-semibold uppercase text-amber-500">
                                                                 Attendees
                                                             </p>
-                                                            <Link className="py-2" href="/">
-                                                                Conference Program
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Conference
+                                                                Program
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Keynote Speakers
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Invited Speakers
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Accepted Presentations
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Accepted
+                                                                Presentations
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Featured Courses
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Featured Workshops
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Featured
+                                                                Workshops
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Featured Courses
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Instructions To Attendees
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Instructions To
+                                                                Attendees
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Registrations
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Session Recording Policy
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Session
+                                                                Recording Policy
                                                             </Link>
                                                         </div>
                                                         <div className="flex flex-col gap-4 border-b border-zinc-800 p-6">
                                                             <p className="inline-flex items-center text-sm font-semibold uppercase text-amber-500">
                                                                 Authors
                                                             </p>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/papers"
+                                                            >
                                                                 Full Paper
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Student Research Consortium
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Student Research
+                                                                Consortium
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Student Design Consortium
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Student Design
+                                                                Consortium
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/posters-and-demos"
+                                                            >
                                                                 Posters & Demos
                                                             </Link>
-                                                            <Link className="py-2" href="/">
-                                                                Industry & Startups
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
+                                                                Industry &
+                                                                Startups
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/workshops-and-courses"
+                                                            >
                                                                 Courses
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/workshops-and-courses"
+                                                            >
                                                                 Workshops
                                                             </Link>
-                                                            <Link className="py-2" href="/">
+                                                            <Link
+                                                                className="py-2"
+                                                                href="/"
+                                                            >
                                                                 Out of India
                                                             </Link>
                                                         </div>
@@ -212,10 +297,11 @@ export default function RootLayout({ children }) {
                                         {({ open }) => (
                                             <>
                                                 <Popover.Button
-                                                    className={`${open
+                                                    className={`${
+                                                        open
                                                             ? 'text-amber-500'
                                                             : 'text-zinc-900'
-                                                        }
+                                                    }
                                                 inline-flex items-center text-sm font-semibold uppercase outline-none`}
                                                 >
                                                     <span>Conference</span>
@@ -232,7 +318,7 @@ export default function RootLayout({ children }) {
                                                     <Popover.Panel className="absolute left-1/2 z-10 mt-3 flex w-max -translate-x-1/2 transform flex-col overflow-hidden rounded-lg bg-zinc-900 font-body text-sm font-normal text-white">
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
-                                                            href="/"
+                                                            href="/organising-committee"
                                                         >
                                                             Organizing Committee
                                                         </Link>
@@ -293,10 +379,11 @@ export default function RootLayout({ children }) {
                                         {({ open }) => (
                                             <>
                                                 <Popover.Button
-                                                    className={`${open
+                                                    className={`${
+                                                        open
                                                             ? 'text-amber-500'
                                                             : 'text-zinc-900'
-                                                        }
+                                                    }
                                                 inline-flex items-center text-sm font-semibold uppercase outline-none`}
                                                 >
                                                     <span>Attendees</span>
@@ -333,7 +420,8 @@ export default function RootLayout({ children }) {
                                                             className="border-b border-zinc-800 p-4"
                                                             href="/"
                                                         >
-                                                            Accepted Presentations
+                                                            Accepted
+                                                            Presentations
                                                         </Link>
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
@@ -357,7 +445,8 @@ export default function RootLayout({ children }) {
                                                             className="border-b border-zinc-800 p-4"
                                                             href="/"
                                                         >
-                                                            Instructions To Attendees
+                                                            Instructions To
+                                                            Attendees
                                                         </Link>
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
@@ -369,7 +458,8 @@ export default function RootLayout({ children }) {
                                                             className="border-b border-zinc-800 p-4"
                                                             href="/"
                                                         >
-                                                            Session Recording Policy
+                                                            Session Recording
+                                                            Policy
                                                         </Link>
                                                     </Popover.Panel>
                                                 </Transition>
@@ -380,10 +470,11 @@ export default function RootLayout({ children }) {
                                         {({ open }) => (
                                             <>
                                                 <Popover.Button
-                                                    className={`${open
+                                                    className={`${
+                                                        open
                                                             ? 'text-amber-500'
                                                             : 'text-zinc-900'
-                                                        }
+                                                    }
                                                 inline-flex items-center text-sm font-semibold uppercase outline-none`}
                                                 >
                                                     <span>Authors</span>
@@ -400,7 +491,7 @@ export default function RootLayout({ children }) {
                                                     <Popover.Panel className="absolute left-1/2 z-10 mt-3 flex w-max -translate-x-1/2 transform flex-col overflow-hidden rounded-lg bg-zinc-900 font-body text-sm font-normal text-white">
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
-                                                            href="/"
+                                                            href="/papers"
                                                         >
                                                             Full Paper
                                                         </Link>
@@ -408,17 +499,19 @@ export default function RootLayout({ children }) {
                                                             className="border-b border-zinc-800 p-4"
                                                             href="/"
                                                         >
-                                                            Student Research Consortium
+                                                            Student Research
+                                                            Consortium
                                                         </Link>
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
                                                             href="/"
                                                         >
-                                                            Student Design Consortium
+                                                            Student Design
+                                                            Consortium
                                                         </Link>
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
-                                                            href="/"
+                                                            href="/posters-and-demos"
                                                         >
                                                             Poster & Demos
                                                         </Link>
@@ -436,7 +529,7 @@ export default function RootLayout({ children }) {
                                                         </Link>
                                                         <Link
                                                             className="border-b border-zinc-800 p-4"
-                                                            href="/"
+                                                            href="/workshops-and-courses"
                                                         >
                                                             Workshops
                                                         </Link>
